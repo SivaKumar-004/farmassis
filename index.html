@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmAssist - Smart Agriculture Solutions</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-image: url('https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            padding: 40px 0;
+            text-align: center;
+            color: #fff;
+            background-color: #2c3e50;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 3em;
+        }
+
+        header p {
+            font-size: 1.2em;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px 0;
+        }
+
+        /* Search Section */
+        #search-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        #search-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        #search-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #search-form select, #search-form button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        #search-form button {
+            background-color: #27ae60;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-form button:hover {
+            background-color: #219150;
+        }
+
+        /* Overview Section */
+        #overview {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        #overview h2 {
+            margin-bottom: 15px;
+            color: #2980b9;
+        }
+
+        #overview p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        #overview ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        /* Data Display Sections */
+        .data-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .data-section h3 {
+            margin-bottom: 20px;
+            color: #e67e22;
+        }
+
+        .data-display p {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        /* Charts */
+        .chart-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #search-form {
+                flex-direction: column;
+            }
+
+            #search-form select, #search-form button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>FarmAssist</h1>
+        <p>Empowering Farmers with Smart Agricultural Insights</p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Search Section -->
+        <section id="search-section">
+            <h2>Find Your State's Agricultural Insights</h2>
+            <form id="search-form">
+                <select id="state-select" required>
+                    <option value="" disabled selected>Select a State or UT</option>
+                    <!-- List of Indian States and Union Territories -->
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                    <option value="Daman and Diu">Daman and Diu</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Puducherry">Puducherry</option>
+                </select>
+                <button type="submit">Search</button>
+            </form>
+        </section>
+
+        <!-- Overview Section -->
+        <section id="overview">
+            <h2>About FarmAssist</h2>
+            <p>FarmAssist is a cutting-edge platform designed to empower farmers across India with real-time climate data, current temperatures, humidity levels, and tailored crop recommendations. By integrating advanced technologies and data from NASA and its esteemed Space Agency Partners, we bridge the gap between space-based observations and on-ground agricultural practices.</p>
+            <h3>Our Mission</h3>
+            <p>To enhance agricultural productivity and sustainability by providing farmers with actionable insights derived from satellite data and advanced analytics.</p>
+            <h3>Technologies We Utilize</h3>
+            <ul>
+                <li><strong>NASA EOSDIS:</strong> For comprehensive Earth observation data.</li>
+                <li><strong>European Space Agency Copernicus:</strong> For high-resolution satellite imagery.</li>
+                <li><strong>Canadian Space Agency RADARSAT:</strong> For soil moisture and land use analysis.</li>
+                <li><strong>Japan Aerospace Exploration Agency ALOS:</strong> For topographical mapping.</li>
+                <li><strong>Chart.js:</strong> For interactive data visualization.</li>
+                <li><strong>Django & Django REST Framework:</strong> For robust backend development.</li>
+            </ul>
+        </section>
+
+        <!-- Climate Data Section -->
+        <section class="data-section" id="climate-data" style="display:none;">
+            <h3>Climate Information for <span id="selected-state"></span></h3>
+            <div class="data-display">
+                <p><strong>Temperature:</strong> <span id="temperature"></span> °C</p>
+                <p><strong>Humidity:</strong> <span id="humidity"></span> %</p>
+                <p><strong>Climate:</strong> <span id="climate"></span></p>
+            </div>
+
+            <!-- Interactive Charts -->
+            <div class="chart-container">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="humidityChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Crop Recommendations Section -->
+        <section class="data-section" id="crop-recommendations" style="display:none;">
+            <h3>Crop Recommendations for <span id="selected-state-crop"></span></h3>
+            <div class="data-display">
+                <p><strong>Recommended Crop:</strong> <span id="recommended-crop"></span></p>
+                <p><strong>Water Moisture Content:</strong> <span id="water-moisture"></span> mm</p>
+                <p><strong>Optimal Planting Time:</strong> <span id="planting-time"></span></p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 FarmAssist. All Rights Reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mock Data for Indian States and Union Territories
+        const stateData = {
+            "Andhra Pradesh": {
+                climate: "Tropical Wet and Dry",
+                temperature: 30,
+                humidity: 70,
+                temperatureHistory: [28, 29, 30, 31, 30, 29, 28],
+                humidityHistory: [68, 70, 72, 71, 70, 69, 68],
+                recommendedCrop: "Rice",
+                waterMoisture: 550,
+                plantingTime: "June"
+            },
+            "Arunachal Pradesh": {
+                climate: "Humid Subtropical",
+                temperature: 25,
+                humidity: 75,
+                temperatureHistory: [24, 25, 25, 26, 25, 24, 24],
+                humidityHistory: [70, 72, 75, 73, 75, 74, 72],
+                recommendedCrop: "Apiculture",
+                waterMoisture: 500,
+                plantingTime: "April"
+            },
+            "Assam": {
+                climate: "Humid Subtropical",
+                temperature: 27,
+                humidity: 80,
+                temperatureHistory: [26, 27, 27, 28, 27, 26, 26],
+                humidityHistory: [78, 80, 82, 81, 80, 79, 78],
+                recommendedCrop: "Tea",
+                waterMoisture: 600,
+                plantingTime: "May"
+            },
+            "Bihar": {
+                climate: "Humid Subtropical",
+                temperature: 29,
+                humidity: 65,
+                temperatureHistory: [28, 29, 29, 30, 29, 28, 28],
+                humidityHistory: [60, 62, 65, 64, 65, 63, 62],
+                recommendedCrop: "Wheat",
+                waterMoisture: 450,
+                plantingTime: "November"
+            },
+            "Chhattisgarh": {
+                climate: "Tropical Wet and Dry",
+                temperature: 28,
+                humidity: 60,
+                temperatureHistory: [26, 27, 28, 29, 28, 27, 26],
+                humidityHistory: [58, 60, 60, 59, 60, 58, 57],
+                recommendedCrop: "Paddy",
+                waterMoisture: 500,
+                plantingTime: "June"
+            },
+            "Goa": {
+                climate: "Tropical Monsoon",
+                temperature: 31,
+                humidity: 85,
+                temperatureHistory: [30, 31, 31, 32, 31, 30, 30],
+                humidityHistory: [80, 82, 85, 83, 85, 84, 83],
+                recommendedCrop: "Cashew",
+                waterMoisture: 650,
+                plantingTime: "March"
+            },
+            "Gujarat": {
+                climate: "Semi-Arid",
+                temperature: 35,
+                humidity: 40,
+                temperatureHistory: [33, 34, 35, 36, 35, 34, 33],
+                humidityHistory: [38, 40, 42, 41, 40, 39, 38],
+                recommendedCrop: "Groundnut",
+                waterMoisture: 400,
+                plantingTime: "April"
+            },
+            "Haryana": {
+                climate: "Humid Subtropical",
+                temperature: 30,
+                humidity: 55,
+                temperatureHistory: [28, 29, 30, 31, 30, 29, 28],
+                humidityHistory: [50, 52, 55, 54, 55, 53, 52],
+                recommendedCrop: "Wheat",
+                waterMoisture: 450,
+                plantingTime: "November"
+            },
+            "Himachal Pradesh": {
+                climate: "Humid Continental",
+                temperature: 20,
+                humidity: 65,
+                temperatureHistory: [19, 20, 20, 21, 20, 19, 19],
+                humidityHistory: [60, 62, 65, 64, 65, 63, 62],
+                recommendedCrop: "Apple",
+                waterMoisture: 400,
+                plantingTime: "April"
+            },
+            "Jharkhand": {
+                climate: "Humid Subtropical",
+                temperature: 28,
+                humidity: 70,
+                temperatureHistory: [27, 28, 28, 29, 28, 27, 27],
+                humidityHistory: [68, 70, 72, 71, 70, 69, 68],
+                recommendedCrop: "Rice",
+                waterMoisture: 500,
+                plantingTime: "June"
+            },
+            "Karnataka": {
+                climate: "Tropical Savanna",
+                temperature: 28,
+                humidity: 65,
+                temperatureHistory: [26, 27, 28, 29, 28, 27, 26],
+                humidityHistory: [60, 62, 65, 64, 65, 63, 62],
+                recommendedCrop: "Cotton",
+                waterMoisture: 500,
+                plantingTime: "May"
+            },
+            "Kerala": {
+                climate: "Tropical Monsoon",
+                temperature: 30,
+                humidity: 80,
+                temperatureHistory: [29, 30, 30, 31, 30, 29, 29],
+                humidityHistory: [78, 80, 82, 81, 80, 79, 78],
+                recommendedCrop: "Rubber",
+                waterMoisture: 700,
+                plantingTime: "March"
+            },
+            "Madhya Pradesh": {
+                climate: "Humid Subtropical",
+                temperature: 32,
+                humidity: 60,
+                temperatureHistory: [30, 31, 32, 33, 32, 31, 30],
+                humidityHistory: [58, 60, 62, 61, 60, 59, 58],
+                recommendedCrop: "Soybean",
+                waterMoisture: 480,
+                plantingTime: "June"
+            },
+            "Maharashtra": {
+                climate: "Tropical Wet and Dry",
+                temperature: 32,
+                humidity: 60,
+                temperatureHistory: [30, 31, 32, 33, 32, 31, 30],
+                humidityHistory: [58, 60, 62, 61, 60, 59, 58],
+                recommendedCrop: "Sugarcane",
+                waterMoisture: 600,
+                plantingTime: "April"
+            },
+            "Manipur": {
+                climate: "Humid Subtropical",
+                temperature: 26,
+                humidity: 75,
+                temperatureHistory: [25, 26, 26, 27, 26, 25, 25],
+                humidityHistory: [72, 75, 78, 77, 75, 74, 73],
+                recommendedCrop: "Rice",
+                waterMoisture: 580,
+                plantingTime: "May"
+            },
+            "Meghalaya": {
+                climate: "Humid Subtropical",
+                temperature: 24,
+                humidity: 80,
+                temperatureHistory: [23, 24, 24, 25, 24, 23, 23],
+                humidityHistory: [78, 80, 82, 81, 80, 79, 78],
+                recommendedCrop: "Tea",
+                waterMoisture: 620,
+                plantingTime: "June"
+            },
+            "Mizoram": {
+                climate: "Humid Subtropical",
+                temperature: 25,
+                humidity: 78,
+                temperatureHistory: [24, 25, 25, 26, 25, 24, 24],
+                humidityHistory: [75, 78, 80, 79, 78, 77, 76],
+                recommendedCrop: "Rubber",
+                waterMoisture: 600,
+                plantingTime: "May"
+            },
+            "Nagaland": {
+                climate: "Humid Subtropical",
+                temperature: 27,
+                humidity: 72,
+                temperatureHistory: [26, 27, 27, 28, 27, 26, 26],
+                humidityHistory: [70, 72, 74, 73, 72, 71, 70],
+                recommendedCrop: "Tea",
+                waterMoisture: 650,
+                plantingTime: "May"
+            },
+            "Odisha": {
+                climate: "Humid Subtropical",
+                temperature: 31,
+                humidity: 70,
+                temperatureHistory: [30, 31, 31, 32, 31, 30, 30],
+                humidityHistory: [68, 70, 72, 71, 70, 69, 68],
+                recommendedCrop: "Rice",
+                waterMoisture: 700,
+                plantingTime: "June"
+            },
+            "Punjab": {
+                climate: "Humid Continental",
+                temperature: 25,
+                humidity: 55,
+                temperatureHistory: [23, 24, 25, 26, 25, 24, 23],
+                humidityHistory: [50, 52, 55, 54, 55, 53, 52],
+                recommendedCrop: "Wheat",
+                waterMoisture: 450,
+                plantingTime: "November"
+            },
+            "Rajasthan": {
+                climate: "Arid",
+                temperature: 35,
+                humidity: 30,
+                temperatureHistory: [34, 35, 35, 36, 35, 34, 34],
+                humidityHistory: [28, 30, 32, 31, 30, 29, 28],
+                recommendedCrop: "Barley",
+                waterMoisture: 350,
+                plantingTime: "October"
+            },
+            "Sikkim": {
+                climate: "Humid Continental",
+                temperature: 20,
+                humidity: 65,
+                temperatureHistory: [19, 20, 20, 21, 20, 19, 19],
+                humidityHistory: [60, 62, 65, 64, 65, 63, 62],
+                recommendedCrop: "Apple",
+                waterMoisture: 400,
+                plantingTime: "April"
+            },
+            "Tamil Nadu": {
+                climate: "Tropical Wet and Dry",
+                temperature: 29,
+                humidity: 70,
+                temperatureHistory: [28, 29, 29, 30, 29, 28, 28],
+                humidityHistory: [68, 70, 72, 71, 70, 69, 68],
+                recommendedCrop: "Cotton",
+                waterMoisture: 500,
+                plantingTime: "May"
+            },
+            "Telangana": {
+                climate: "Tropical Wet and Dry",
+                temperature: 30,
+                humidity: 65,
+                temperatureHistory: [28, 29, 30, 31, 30, 29, 28],
+                humidityHistory: [63, 65, 68, 67, 65, 64, 63],
+                recommendedCrop: "Sugarcane",
+                waterMoisture: 550,
+                plantingTime: "April"
+            },
+            "Tripura": {
+                climate: "Humid Subtropical",
+                temperature: 27,
+                humidity: 75,
+                temperatureHistory: [26, 27, 27, 28, 27, 26, 26],
+                humidityHistory: [72, 75, 78, 77, 75, 74, 73],
+                recommendedCrop: "Rubber",
+                waterMoisture: 620,
+                plantingTime: "May"
+            },
+            "Uttar Pradesh": {
+                climate: "Humid Subtropical",
+                temperature: 28,
+                humidity: 60,
+                temperatureHistory: [27, 28, 28, 29, 28, 27, 27],
+                humidityHistory: [58, 60, 62, 61, 60, 59, 58],
+                recommendedCrop: "Sugarcane",
+                waterMoisture: 480,
+                plantingTime: "October"
+            },
+            "Uttarakhand": {
+                climate: "Humid Continental",
+                temperature: 22,
+                humidity: 65,
+                temperatureHistory: [21, 22, 22, 23, 22, 21, 21],
+                humidityHistory: [60, 62, 65, 64, 65, 63, 62],
+                recommendedCrop: "Apple",
+                waterMoisture: 420,
+                plantingTime: "April"
+            },
+            "West Bengal": {
+                climate: "Humid Subtropical",
+                temperature: 30,
+                humidity: 75,
+                temperatureHistory: [29, 30, 30, 31, 30, 29, 29],
+                humidityHistory: [73, 75, 78, 77, 75, 74, 73],
+                recommendedCrop: "Rice",
+                waterMoisture: 700,
+                plantingTime: "June"
+            },
+            "Andaman and Nicobar Islands": {
+                climate: "Tropical Monsoon",
+                temperature: 28,
+                humidity: 80,
+                temperatureHistory: [27, 28, 28, 29, 28, 27, 27],
+                humidityHistory: [78, 80, 82, 81, 80, 79, 78],
+                recommendedCrop: "Rubber",
+                waterMoisture: 650,
+                plantingTime: "May"
+            },
+            "Chandigarh": {
+                climate: "Humid Continental",
+                temperature: 25,
+                humidity: 55,
+                temperatureHistory: [24, 25, 25, 26, 25, 24, 24],
+                humidityHistory: [50, 52, 55, 54, 55, 53, 52],
+                recommendedCrop: "Wheat",
+                waterMoisture: 450,
+                plantingTime: "November"
+            },
+            "Dadra and Nagar Haveli": {
+                climate: "Tropical Wet and Dry",
+                temperature: 29,
+                humidity: 70,
+                temperatureHistory: [28, 29, 29, 30, 29, 28, 28],
+                humidityHistory: [68, 70, 72, 71, 70, 69, 68],
+                recommendedCrop: "Rice",
+                waterMoisture: 500,
+                plantingTime: "June"
+            },
+            "Daman and Diu": {
+                climate: "Tropical Wet and Dry",
+                temperature: 29,
+                humidity: 70,
+                temperatureHistory: [28, 29, 29, 30, 29, 28, 28],
+                humidityHistory: [68, 70, 72, 71, 70, 69, 68],
+                recommendedCrop: "Cashew",
+                waterMoisture: 500,
+                plantingTime: "June"
+            },
+            "Delhi": {
+                climate: "Humid Subtropical",
+                temperature: 35,
+                humidity: 40,
+                temperatureHistory: [33, 34, 35, 36, 35, 34, 33],
+                humidityHistory: [38, 40, 42, 41, 40, 39, 38],
+                recommendedCrop: "Barley",
+                waterMoisture: 400,
+                plantingTime: "October"
+            },
+            "Lakshadweep": {
+                climate: "Tropical Monsoon",
+                temperature: 28,
+                humidity: 85,
+                temperatureHistory: [27, 28, 28, 29, 28, 27, 27],
+                humidityHistory: [83, 85, 87, 86, 85, 84, 83],
+                recommendedCrop: "Rubber",
+                waterMoisture: 700,
+                plantingTime: "May"
+            },
+            "Puducherry": {
+                climate: "Tropical Wet and Dry",
+                temperature: 28,
+                humidity: 75,
+                temperatureHistory: [27, 28, 28, 29, 28, 27, 27],
+                humidityHistory: [73, 75, 78, 77, 75, 74, 73],
+                recommendedCrop: "Rice",
+                waterMoisture: 650,
+                plantingTime: "June"
+            }
+        };
+
+        // Handle Search Form Submission
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const state = document.getElementById('state-select').value;
+            if(state in stateData){
+                displayClimateData(state);
+                displayCropRecommendations(state);
+            } else {
+                alert("Data for the selected state is not available.");
+                // Optionally, hide data sections if data is not available
+                document.getElementById('climate-data').style.display = 'none';
+                document.getElementById('crop-recommendations').style.display = 'none';
+            }
+        });
+
+        // Display Climate Data
+        function displayClimateData(state){
+            const data = stateData[state];
+            document.getElementById('selected-state').innerText = state;
+            document.getElementById('temperature').innerText = data.temperature;
+            document.getElementById('humidity').innerText = data.humidity;
+            document.getElementById('climate').innerText = data.climate;
+
+            document.getElementById('climate-data').style.display = 'block';
+
+            // Generate Charts
+            generateTemperatureChart(data.temperatureHistory);
+            generateHumidityChart(data.humidityHistory);
+        }
+
+        // Display Crop Recommendations
+        function displayCropRecommendations(state){
+            const data = stateData[state];
+            document.getElementById('selected-state-crop').innerText = state;
+            document.getElementById('recommended-crop').innerText = data.recommendedCrop;
+            document.getElementById('water-moisture').innerText = data.waterMoisture;
+            document.getElementById('planting-time').innerText = data.plantingTime;
+
+            document.getElementById('crop-recommendations').style.display = 'block';
+        }
+
+        // Generate Temperature Chart
+        function generateTemperatureChart(history){
+            const ctx = document.getElementById('temperatureChart').getContext('2d');
+            // Destroy previous chart if exists
+            if(window.temperatureChartInstance) {
+                window.temperatureChartInstance.destroy();
+            }
+            window.temperatureChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: history,
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Temperature Trends Over 7 Days'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Days'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Generate Humidity Chart
+        function generateHumidityChart(history){
+            const ctx = document.getElementById('humidityChart').getContext('2d');
+            // Destroy previous chart if exists
+            if(window.humidityChartInstance) {
+                window.humidityChartInstance.destroy();
+            }
+            window.humidityChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                    datasets: [{
+                        label: 'Humidity (%)',
+                        data: history,
+                        backgroundColor: 'rgba(46, 204, 113, 0.6)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Humidity Levels Over 7 Days'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Humidity (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Days'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
